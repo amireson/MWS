@@ -1,0 +1,135 @@
+---
+title: "Hypothesis 4 - Higher spring water levels and possibility of flooding exists when: Water levels were high in the previous fall."  
+output:
+    html_notebook: default
+    pdf_document: default
+---
+
+The purpose of this code is to determine if fall water levels are related to spirng flooding and/or to high spring water levels 
+
+NOTE: Need to run the script 'Streamflow' (SFMax function) first to get some of the variables needed to run this script. Fall water levels (example, the average water level in a two week window in October) was determined in the Streamflow script. So this script just calls that dataframe.
+
+Libraries to run when you open R
+```{r}
+library(CRHMr)
+library(plyr)
+library(tidyverse)
+library(lubridate)
+library(plotly)
+library(reshape2)
+library(tidyhydat)
+library(weathercan)
+library(reshape2)
+library(scales)
+library(zoo)
+library(xts)
+
+setwd("C:/Users/Goldmember/Documents/USask/MWSterm3project/R/FOR_PROJECT")
+```
+
+Linear regression model for comparing peak fall streamflow against peak spring streamflow.
+First, select a date range common to both datasets (so that row lengths are equal).
+```{r}
+#Streamflow Fall
+SFFall <- SFFall_MaxFS[SFFall_MaxFS$Date >= '1964-01-01' &
+          SFFall_MaxFS$Date <= '2014-12-31',]
+#Streamflow Spring
+SFSpr <- SFMaxFS[SFMaxFS$Date >= '1964-01-01' &
+          SFMaxFS$Date <= '2014-12-31',]
+
+#Create linear model
+fit_line <- lm(SFSpr$Value ~ SFFall$Value)
+summary(fit_line)
+PV <- signif(summary(fit_line)$coefficients[2,4],3) #P-value (signif is significant digits - the last digit)
+R2 <- signif(summary(fit_line)$r.squared,3)         #R-squared value
+
+#plot
+plot(SFFall$Value,SFSpr$Value,
+       xlab="Maximum fall streamflows", ylab="Maximum spring streamflow")
+abline(fit_line)
+title(main="Peak Fall Streamflow Plotted Against the Corresponding
+   Peak Spring Streamflow for Fort Simpson", col.main="black", font.main=4)
+mtext(paste ('P-Value:',PV, sep = " ", collapse = NULL),
+   3, line=-2)
+mtext(paste ('R-squared Value:',R2, sep = " ", collapse = NULL),
+   3, line=-3)
+
+```
+
+Linear regression model for comparing peak fall streamflow against peak WATER LEVEL.
+First, select a date range common to both datasets (so that row lengths are equal).
+```{r}
+#Water Level Fall
+WLFall <- WLFall_MaxFS[WLFall_MaxFS$Date >= '1964-01-01' &
+          WLFall_MaxFS$Date <= '2014-12-31',]
+#Water Level Spring
+WLSpr <- WLMaxFS[WLMaxFS$Date >= '1964-01-01' &
+          WLMaxFS$Date <= '2014-12-31',]
+
+#Create linear model
+fit_line <- lm(WLSpr$Value ~ WLFall$Value)
+summary(fit_line)
+PV <- signif(summary(fit_line)$coefficients[2,4],3) #P-value (signif is significant digits - the last digit)
+R2 <- signif(summary(fit_line)$r.squared,3)         #R-squared value
+
+#plot
+plot(WLFall$Value,WLSpr$Value,
+       xlab="Maximum fall water levels", ylab="Maximum spring water levels")
+abline(fit_line)
+title(main="Peak Fall Streamflow Plotted Against the Corresponding
+   Peak Spring Water Levels for Fort Simpson", col.main="black", font.main=4)
+mtext(paste ('P-Value:',PV, sep = " ", collapse = NULL),
+   3, line=-2)
+mtext(paste ('R-squared Value:',R2, sep = " ", collapse = NULL),
+   3, line=-3)
+
+
+
+```
+
+
+
+
+
+Part B
+Are flood events assoicated with high fall water levels from the previous year? Are fall streamflows prior to ice jam floods above or below long-term average?
+
+The flood years for the community of interest need to be entered in the 'FloodEvents' list.
+```{r}
+# FloodEvents <- list(1952, 1963, 1965, 1972, 1974, 1978, 1979, 1981, 1982, 1985, 1986, 1989, 1992, 1994, 1997, 2001, 2003, 2005, 2006, 2007, 2008, 2009, 2010)
+FloodEvents <- list(1961, 1982, 1992, 2006, 2013)
+FloodEvents
+#matches 
+FE <- SFFall_MaxAk[SFFall_MaxAk$year %in% FloodEvents,]
+
+NFE <- SFFall_MaxAk[!SFFall_MaxAk$year %in% FloodEvents,]
+
+#mean two week peak October streamflow for flood years
+MFE <- mean(FE$AvgT2W, na.rm=TRUE)
+
+#mean two week peak October streamflow for all the years - excluding flood years
+MNFE <- mean(NFE$AvgT2W , na.rm=TRUE)
+
+MFE
+MNFE
+
+```
+Flood years vs. water level
+```{r}
+FloodEvents <- list(1952, 1963, 1965, 1972, 1974, 1978, 1979, 1981, 1982, 1985, 1986, 1989, 1992, 1994, 1997, 2001, 2003, 2005, 2006, 2007, 2008, 2009, 2010)
+FloodEvents
+#matches 
+FE2 <- WLFall_Max[WLFall_Max$year %in% FloodEvents,]
+
+NFE2 <- WLFall_Max[!WLFall_Max$year %in% FloodEvents,]
+
+#mean two week peak October streamflow for flood years
+MFE2 <- mean(FE2$AvgT2W, na.rm=TRUE)
+
+#mean two week peak October streamflow for all the years - excluding flood years
+MNFE2 <- mean(NFE2$AvgT2W , na.rm=TRUE)
+
+MFE2
+MNFE2
+
+```

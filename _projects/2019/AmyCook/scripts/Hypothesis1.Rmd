@@ -1,0 +1,134 @@
+---
+title: "Hypothesis #1 - Higher spring flows and possibility of flooding exists when: Spring Melt occurs late"
+output:
+    html_notebook: default
+    pdf_document: default
+---
+
+The purpose of this code is to determine if the timing of spring melt is related to ice jam flooding.
+
+NOTE: Need to run the script 'Timing of Spring Melt' (SpMT function) and 'Streamflow' (SFMax function) first to get some of the variables needed to run this script.
+
+Libraries to run when you open R
+```{r}
+library(CRHMr)
+library(plyr)
+library(tidyverse)
+library(lubridate)
+library(plotly)
+library(reshape2)
+library(tidyhydat)
+library(weathercan)
+library(reshape2)
+library(scales)
+library(zoo)
+library(xts)
+
+setwd("C:/Users/Goldmember/Documents/USask/MWSterm3project/R/FOR_PROJECT")
+```
+
+First, select a date range common to both datasets - Spring Melt temp (SpTemp - derived from "Timing of Spring Melt" script, using the function name SpMT.DOY (for day of year of start of spring melt)) and Max Streamflow (SFMax - from the script "Streamflow".) Row lengths should be equal. Then, change the Day of Year (DOY) to numeric for calculations.
+```{r}
+
+SpTemp <- SpMT.DOY[SpMT.DOY$datetime>='1964-01-01' &
+          SpMT.DOY$datetime<='2014-12-31',]
+SFM <- SFMax[SFMax$Date>='1964-01-01' &
+          SFMax$Date<='2014-12-31',]
+
+STemp$DOY <- as.numeric(STemp$DOY)
+SFM$DOY <- as.numeric(SFM$DOY)
+```
+
+Create linear regression model, including r-squared and p-value - STREAMFLOW
+```{r}
+#regression curve is called "fit_line" here using the linear model function
+fit_line <- lm(SFM$DOY ~ STemp$DOY)
+summary(fit_line)
+PV <- signif(summary(fit_line)$coefficients[2,4],3) #P-value (signif is significant digits)
+R2 <- signif(summary(fit_line)$r.squared,3)         #R-squared value
+
+
+#plotting regression curve
+plot(STemp$DOY, SFM$DOY,
+     xlab="Day of Year Spring Melt Starts", ylab="Day of Year of Max Streamflow")
+fit_line <- lm(SFM$DOY ~ STemp$DOY)
+abline(fit_line)
+title(main="Spring Thaw Timing Plotted Against the Timing of 
+   Maximum Spring Water Flows", col.main="black", font.main=4)
+mtext(paste ('p-value:',PV, sep = " ", collapse = NULL),
+   3, line=-2)
+mtext(paste ('r-squared value:',R2, sep = " ", collapse = NULL),
+   3, line=-3)
+
+
+```
+
+Create linear regression model, including r-squared and p-value - WATER LEVEL SINCE 2002
+```{r}
+#For Level from 2002 on
+SpTemp <- SpMT.DOY[SpMT.DOY$datetime >= '1964-01-01' &
+          SpMT.DOY$datetime <= '2014-12-31',]
+SFM <- SFMax[SFMax$Date >= '1964-01-01' &
+          SFMax$Date <= '2014-12-31',]
+
+STemp$DOY <- as.numeric(STemp$DOY)
+SFM$DOY <- as.numeric(SFM$DOY)
+
+#regression curve is called "fit_line" here using the linear model function
+fit_line <- lm(SFM$DOY ~ STemp$DOY)
+summary(fit_line)
+PV <- signif(summary(fit_line)$coefficients[2,4],3) #P-value (signif is significant digits)
+R2 <- signif(summary(fit_line)$r.squared,3)         #R-squared value
+
+
+#plotting regression curve
+plot(STemp$DOY, SFM$DOY,
+     xlab="Day of year spring melt starts", ylab="Day of year of max streamflow")
+fit_line <- lm(SFM$DOY ~ STemp$DOY)
+abline(fit_line)
+title(main="Spring Thaw Timing Plotted Against the Timing of 
+   Maximum Spring Water Flows", col.main="black", font.main=4)
+mtext(paste ('p-value:',PV, sep = " ", collapse = NULL),
+   3, line=-2)
+mtext(paste ('r-squared value:',R2, sep = " ", collapse = NULL),
+   3, line=-3)
+```
+
+
+Part B
+Are flood events associated with later spring melts? Is flood-related spring melt timing above or below the long term average?  This next part takes the mean of the flow column for non-flood years and the mean of the flow column for flood years and compares them.  
+
+The flood years for the community of interest need to be entered in the 'FloodEvents' list.
+```{r}
+#Streamflows
+FloodEvents <- list(1952, 1963, 1965, 1972, 1974, 1978, 1979, 1981, 1982, 1985, 1986, 1989, 1992, 1994, 1997, 2001, 2003, 2005, 2006, 2007, 2008, 2009, 2010)
+FloodEvents
+#matches 
+FE <- SFM[SFM$year %in% FloodEvents,]
+
+NFE <- SFM[!SFM$year %in% FloodEvents,]
+
+#mean of flood year water level
+MFE <- mean(FE$Value, na.rm=TRUE)
+
+#mean of water level for all the years - excluding flood years
+MNFE <- mean(NFE$Value , na.rm=TRUE)
+```
+
+```{r}
+#Water Level
+FloodEvents <- list(1952, 1963, 1965, 1972, 1974, 1978, 1979, 1981, 1982, 1985, 1986, 1989, 1992, 1994, 1997, 2001, 2003, 2005, 2006, 2007, 2008, 2009, 2010)
+FloodEvents
+#matches 
+FE2 <- SFM[SFM$year %in% FloodEvents,]
+
+NFE2 <- SFM[!SFM$year %in% FloodEvents,]
+
+#mean of flood year water level
+MFE2 <- mean(FE$Value, na.rm=TRUE)
+
+#mean of water level for all the years - excluding flood years
+MNFE2 <- mean(NFE$Value , na.rm=TRUE)
+```
+
+

@@ -1,0 +1,652 @@
+---
+title: "Compiling Data for Complete Sets"
+output:
+    html_notebook: default
+    pdf_document: default
+---
+
+The purpose of this code series is to compile various datasets from meterological stations of similar location and similar elevation for a particular site. The end goal is to have a more "complete" time series dataset for each location. This is done via binding, imputation, and interpolation.
+
+Libraries to run when you open R
+```{r include=FALSE}
+library(rclimateca)
+library(CRHMr)
+library(plyr)
+library(tidyverse)
+library(tidyhydat)
+library(lubridate)
+library(weathercan)
+library(reshape2)
+library(stringr)
+library(zoo)
+
+setwd("C:/Users/Goldmember/Documents/USask/MWSterm3project/R")
+```
+
+First step: identify which stations you'd like to use for which sites (not necessary if you know your station numbers already)
+```{r}
+#Search for Station Number if needed
+stations_search("Fort Simpson", interval = "day")
+```
+***
+## FORT SIMPSON
+```{r}
+#First step, bind together the three chronological stations to make one consecutive long term dataset (uses rclimate):
+FortSimpson1 <- ec_climate_data(
+  (1655),
+  timeframe = "daily",
+  start = "1897-03-01", 
+  end = "1963-10-31"
+)
+FortSimpson2 <- ec_climate_data(
+  (1656),
+  timeframe = "daily",
+  start = "1963-11-01", 
+  end = "2014-10-02"
+)
+FortSimpson3 <- ec_climate_data(
+  (52780),
+  timeframe = "daily",
+  start = "2014-10-03", 
+  end = "2018-12-31"
+)
+FSComplete <- rbind(FortSimpson1, FortSimpson2, FortSimpson3)
+```
+
+```{r}
+#Change date format of the complete set to as.POSIXct (datetime). Also, pull out select variables wanted for analysis (changed name to FSComplete2 so FSComplete is still available if needed):
+FSComplete$date <- as.POSIXct(FSComplete$date)
+FSComplete2 <- data.frame(FSComplete$date, 
+                          FSComplete$total_precip_mm, 
+                          FSComplete$mean_temp_c, 
+                          FSComplete$max_temp_c, 
+                          FSComplete$min_temp_c, 
+                          FSComplete$snow_on_grnd_cm, 
+                          FSComplete$total_rain_mm, 
+                          FSComplete$total_snow_cm
+                          )
+
+#Change names of columns to match CRHMr format for imputation and interpolation using the CRHMr package:
+names(FSComplete2) <- c('datetime', 
+                        'p.1', 
+                        'mt.1', 
+                        'mxt.1', 
+                        'mnt.1', 
+                        'sg.1', 
+                        'tr.1', 
+                        'ts.1'
+                        )
+```
+***
+##### Compare Data
+```{r}
+#Pull data from a fourth station that covers similar time period for imputaton purposes. Do correlations checks with this data and the data from the complete set (FSComplete2)to see if data can be used for imputation:
+FortSimpson4 <- ec_climate_data(
+  (41944),
+  timeframe = "daily",
+  start = "2003-08-27", 
+  end = "2018-12-31"
+)
+
+#Pull out date range from FSComplete2 for correlation comparisons to the same date range for FortSimpson4 to see if data can be used for imputation:
+FSComplete.imp <- FSComplete2[FSComplete2$date>='2003-08-26' &
+                                FSComplete2$date<='2018-12-31',]
+
+#Change date format of the complete set to as.POSIXct (datetime). Also, pull out select variables wanted for analysis:
+FortSimpson4$date <- as.POSIXct(FortSimpson4$date)
+FortSimpson4 <- data.frame(FortSimpson4$date, 
+                           FortSimpson4$total_precip_mm, 
+                           FortSimpson4$mean_temp_c, 
+                           FortSimpson4$max_temp_c, 
+                           FortSimpson4$min_temp_c, 
+                           FortSimpson4$snow_on_grnd_cm, 
+                           FortSimpson4$total_rain_mm, 
+                           FortSimpson4$total_snow_cm
+                           ) 
+
+#Change names of columns to match CRHMr format:
+names(FortSimpson4) <- c('datetime', 
+                         'p.1', 
+                         'mt.1', 
+                         'mxt.1', 
+                         'mnt.1', 
+                         'sg.1', 
+                         'tr.1', 
+                         'ts.1'
+                         )
+
+#Correlations to see if FortSimpson4 data can be imputed into FSComplete
+#Create a linear model - RUN BEFORE PLOT. Change variables in linear model code and plot code to the variables you'd like to compare.
+fit.line <- lm(FSComplete.imp$mxt.1 ~ FortSimpson4$mxt.1)
+fit.lineS <- summary(fit.line)
+R2 <- signif(fit.lineS$r.squared,3) 
+
+#Plots the same variable from two stations for comparison.  Adds 1:1 line to check relationship:
+plot(FSComplete.imp$mxt.1, 
+     FortSimpson4$mxt.1, 
+     col = 'gray28', 
+     ylim=c(0,25),
+     xlim=c(0,25)
+     )
+abline(fit.line, 
+       col='yellow', 
+       lwd=3
+       )
+title(main="Correlations",
+      col.main="black", 
+      font.main=4
+      )
+mtext(paste ('Y =', round(fit.lineS$coefficients[1],2), '+', 
+             round(fit.lineS$coefficients[-1,1],2), 'x', sep = " ", 
+             collapse = NULL), 3, line=-1
+             )
+mtext(paste ('r-squared value:', R2, sep = " ", 
+             collapse = NULL), 3, line=-2
+      )
+abline(0, 
+       1, 
+       col='green', 
+       lty=2, 
+       lwd=3
+       )
+```
+***
+##### Imputation
+```{r}
+#Check for gaps in the selected datarange of FSComplete2 to compare after pasting in imputed data:
+findGaps(FSComplete.imp, quiet = FALSE)
+
+#Use the CRHMr impute function to impute correlated data identified in previous chunk from the secondary station (FortSimpson4) to the primary station (FSComplete2):
+FSComplete.imp <- impute(FSComplete.imp, c(1:4), 
+                         FortSimpson4, c(1:4)
+                         )
+
+#Check for gaps again to test if imputation worked:
+findGaps(FSComplete.imp, quiet = FALSE)
+
+#Selects out the date range of the to-be-imputed data from the primary station. With this new dataframe, we can paste in the imputed data from the secondary station, and eventually remerge these data with the primary station. For some reason a day is missing on start dates, so the 86400 adds a day to match lengths.
+Rows.impFS <- data.frame(which(FSComplete2[,1] >= as.POSIXct("2003-08-26") & 
+                               FSComplete2[,1] <= as.POSIXct("2018-12-31")))
+
+#Pastes in all the rows of imputed data into the larger dataset.      
+FSComplete2[Rows.impFS[,1],c(1,2:5)] = FSComplete.imp
+```
+***
+##### Interpolation
+```{r}
+#Change the name of the larger, now imputed dataset to preserve if needed (FSComplete.semi = semi-complete dataset. Still needs interpolation to be final:
+FSComplete.semi <- FSComplete2
+
+#Check for gaps before interpolation for comparison after to see if it worked:
+findGaps(FSComplete.semi, quiet = FALSE)
+
+#Interpolates all variables with gaps less than 7 days. Does not include precipitation:
+FSComplete.int <- interpolate(FSComplete.semi, 
+                              varcols = 2:7, 
+                              methods = "spline", 
+                              maxlength = 7,
+                              quiet = TRUE, 
+                              logfile = ""
+                              )
+
+#Checks to find gaps in data after interpolation to see if it worked:
+findGaps(FSComplete.int, quiet = FALSE)
+```
+
+Now, there should be a fairly complete, long-term time series data set after imputation and interpolation. Since precipitation was excluded from interpolation, we need to add the column back in.
+```{r}
+#Adds precip column back to imputed and interpolated data, and renames complete dataset as "Final":
+FSComplete.Final <- data.frame(FSComplete.int, FSComplete.semi$p.1)
+names(FSComplete.Final) <- c('datetime', 
+                             'mt.1', 
+                             'mxt.1', 
+                             'mnt.1', 
+                             'sg.1', 
+                             'tr.1', 
+                             'ts.1', 
+                             'p.1'
+                             )
+
+#Adds a column for site name to the dataset:
+FSComplete.Final <- cbind(Site = 'Fort Simpson', 
+                          FSComplete.Final
+                          )
+```
+***
+##### Write Table (if you want a table with just Fort Simpson data)
+```{r}
+# write.csv(FSComplete.Final,
+#           file = "FSComplete.csv", 
+#           row.names = FALSE
+#             )
+```
+
+***
+## HAY RIVER
+```{r}
+#First step, once stations are decided, download climate data from those stations during the same timeframe. Change date columns to as.POSIXct (datetime), and pull out variables wanted for analysis (uses Weathercan). These two datasets will be used for initial imputation:
+W1664 <- weather_dl(station_ids = 1664, 
+                    start = "1962-05-10", 
+                    end = "2002-12-31", 
+                    interval = "day"
+                    )
+
+W1665 <- weather_dl(station_ids = 1665, 
+                    start = "1962-05-10", 
+                    end = "2002-12-31", 
+                    interval = "day"
+                    )
+
+#Changes Date column to datetime and column names to CRHMr format 
+W1664$date <- as.POSIXct(W1664$date)
+W1664 <- data.frame(W1664$date, 
+                    W1664$total_precip, 
+                    W1664$mean_temp, 
+                    W1664$max_temp, 
+                    W1664$min_temp, 
+                    W1664$snow_grnd, 
+                    W1664$total_rain, 
+                    W1664$total_snow
+                    )
+
+names(W1664) <- c('datetime',
+                  'p.1',
+                  'mt.1', 
+                  'mxt.1', 
+                  'mnt.1', 
+                  'sg.1', 
+                  'tr.1', 
+                  'ts.1')
+
+#Changes Date column in second weather station to datetime and column names to CRHMr format 
+W1665$date <- as.POSIXct(W1665$date)
+W1665 <- data.frame(W1665$date, 
+                    W1665$total_precip, 
+                    W1665$mean_temp, 
+                    W1665$max_temp, 
+                    W1665$min_temp, 
+                    W1665$snow_grnd, 
+                    W1665$total_rain, 
+                    W1665$total_snow
+                    )
+names(W1665) <- c('datetime', 
+                  'p.1', 
+                  'mt.1', 
+                  'mxt.1', 
+                  'mnt.1', 
+                  'sg.1', 
+                  'tr.1', 
+                  'ts.1'
+                  )
+```
+***
+##### Compare Data
+```{r}
+#Correlations to ensure W1665 (secondary station) can be used to impute data into W1664 (primary station) 
+
+#Create a linear model - RUN BEFORE PLOT. Change variables in linear model code and plot code to the variables you'd like to compare.
+fit.line <- lm(W1664$mt.1 ~ W1665$mt.1)
+summary(fit.line)
+PV <- signif(summary(fit.line)$coefficients[2,4],5) #P-value (signif is significant digits)
+R2 <- signif(summary(fit.line)$r.squared,3) 
+
+#Plots the same variable from two stations for comparison.  Adds 1:1 line to check relationship:
+plot(W1664$mt.1, 
+     W1665$mt.1, 
+     ylim=c(0,25),
+     xlim=c(0,25)
+     )
+fit.line <- lm(W1664$mt.1 ~ W1665$mt.1)
+abline(fit.line)
+title(main="Correlations",
+      col.main="black", 
+      font.main=4
+      )
+mtext(paste ('p-value:',PV, sep = " ", 
+             collapse = NULL), 3, line=-3
+      )
+mtext(paste ('Y =', round(fit.lineS$coefficients[1],2), '+', 
+             round(fit.lineS$coefficients[-1,1],2), 'x', sep = " ", 
+             collapse = NULL), 3, line=-1
+             )
+mtext(paste ('r-squared value:',R2, sep = " ", 
+             collapse = NULL), 3, line=-2
+      )
+abline(0, 
+       1, 
+       col='green', 
+       lty=2, 
+       lwd=3
+       )
+```
+***
+##### Imputation Part 1: Imputing data from W1665 (secondary station) into NA values in W1664 (primary station). Afterwards, pull all data from W1664 (all years), and eventually paste in the the imputed data.
+```{r}
+#Check for gaps in the selected data range for W1664 (primary station) to know if imputation of W1665 data works:
+findGaps(W1664, quiet = FALSE)
+
+#Use the CRHMr impute function to impute correlated data identified in previous chunk from the secondary station (W1665) into NA spaces of W1664 (columns chosen are mean, max, and min temp)
+W1664.W1665 <- impute(W1664, c(2, 3, 4), 
+                      W1665, c(2, 3, 4)
+                      )
+
+#Check for gaps again in imputed data to make sure it worked:
+findGaps(W1664.W1665, quiet = FALSE)
+
+#Pulls climate data from the first station again, but for the complete date frame desired
+W1664.allyears <- weather_dl(station_ids = 1664,  
+                             start = "1944-01-01", 
+                             end = "2014-12-31", 
+                             interval = "day"
+                             )
+
+#Changes Date column in first weather station with longer record to datetime and column names to CRHMr format   
+W1664.allyears$date <- as.POSIXct(W1664.allyears$date)
+W1664.allyears <- data.frame(W1664.allyears$date, 
+                             W1664.allyears$total_precip, 
+                             W1664.allyears$mean_temp, 
+                             W1664.allyears$max_temp, 
+                             W1664.allyears$min_temp, 
+                             W1664.allyears$snow_grnd,
+                             W1664.allyears$total_rain, 
+                             W1664.allyears$total_snow
+                             )
+names(W1664.allyears) <- c('datetime', 
+                           'p.1', 
+                           'mt.1', 
+                           'mxt.1', 
+                           'mnt.1', 
+                           'sg.1', 
+                           'tr.1', 
+                           'ts.1'
+                           )
+
+#Selects out the date range of the to-be-imputed data from the primary station. With this new dataframe, we can paste in the imputed data from the secondary station, and eventually remerge these data with the primary station. For some reason a day is missing on start dates, so the 86400 adds a day to match lengths.
+Rows <- data.frame(which(W1664.allyears[,1] >= as.POSIXct("1962-05-10")-86400 & 
+                           W1664.allyears[,1] <= as.POSIXct("2002-12-31")))
+
+#check for gaps to compare after pasting in imputed data
+findGaps(W1664.allyears, quiet = FALSE)
+
+#Pastes in all the rows of imputed data into the larger dataset.      
+W1664.allyears[Rows[,1],c(1,3:5)] = W1664.W1665
+
+#Checks to find gaps in the Weather 3 data after imputation
+findGaps(W1664.allyears, quiet = FALSE)
+
+
+```
+***
+##### An additional station exists with data from 2014 (when W1664.allyears ends) and goes through 2018. Here we download the data from that station, then bind it to the end of W1664.allyears.
+```{r}
+#So now we can bind the final station from 2014 to 2018.
+#downloads data
+W52600 <- weather_dl(station_ids = 52600, 
+                     start = "2014-01-01", 
+                     end = "2018-12-31", 
+                     interval = "day"
+                     )
+
+#changes date format
+W52600$date <- as.POSIXct(W52600$date)
+
+#creates new dataframe of only selected variables, then changes names of columns into CRHMr format
+W52600 <- data.frame(W52600$date, 
+                     W52600$total_precip, 
+                     W52600$mean_temp, 
+                     W52600$max_temp, 
+                     W52600$min_temp, 
+                     W52600$snow_grnd, 
+                     W52600$total_rain, 
+                     W52600$total_snow
+                     )
+
+names(W52600) <- c('datetime', 
+                   'p.1', 
+                   'mt.1', 
+                   'mxt.1', 
+                   'mnt.1', 
+                   'sg.1', 
+                   'tr.1', 
+                   'ts.1'
+                   )
+
+#creates semi-final dataframe by binding W52600 with W1664.allyears:  
+HRsemi <- rbind(W1664.allyears, W52600)
+```
+***
+##### Compare Data: A final station exists that can be compared to HRsemi for imputation of data post-2002 (from previous imputation)
+```{r}
+#Impute the final station that has dates from 2003 to 2018 to make W1664_allyears more complete.
+#Download data from final station:
+W41885 <- weather_dl(station_ids = 41885, 
+                     start = "2003-08-14", 
+                     end = "2018-12-30", 
+                     interval = "day"
+                     )
+
+#changes data format
+W41885$date <- as.POSIXct(W41885$date)
+
+#creates dataframe of only selected variables; then changes names to match CRHMr format
+W41885 <- data.frame(W41885$date, 
+                     W41885$total_precip, 
+                     W41885$mean_temp, 
+                     W41885$max_temp, 
+                     W41885$min_temp, 
+                     W41885$snow_grnd, 
+                     W41885$total_rain, 
+                     W41885$total_snow
+                     )
+names(W41885) <- c('datetime', 
+                   'p.1', 
+                   'mt.1', 
+                   'mxt.1', 
+                   'mnt.1', 
+                   'sg.1', 
+                   'tr.1', 
+                   'ts.1'
+                   )
+
+#Pull out dates from 2003 to 2018 from semi-final dataset for correlation comparision and eventual imputation with W41885
+HRsemi.impyears <- HRsemi[HRsemi$datetime >= as.POSIXct("2003-08-14") & 
+                          HRsemi$datetime <= as.POSIXct("2018-12-31"),]
+
+#Correlations
+#Create a linear model - RUN BEFORE PLOT. Change variables in linear model code and plot code to the variables you'd like to compare.
+fit.line <- lm(HRsemi.impyears$mt.1 ~ W41885$mt.1)
+summary(fit.line)
+PV <- signif(summary(fit.line)$coefficients[2,4],5) #P-value (signif is significant digits)
+R2 <- signif(summary(fit.line)$r.squared,3) 
+
+#Plots the same variable from two stations for comparison.  Adds 1:1 line to check relationship:
+plot(HRsemi.impyears$mt.1, 
+     W41885$mt.1,
+     ylim=c(0,25),
+     xlim=c(0,25)
+     )
+fit.line <- lm(HRsemi.impyears$mt.1 ~ W41885$mt.1)
+abline(fit.line)
+title(main="Correlations",
+      col.main="black", 
+      font.main=4
+      )
+mtext(paste ('p-value:',PV, sep = " ", 
+             collapse = NULL), 3, line=-3
+      )
+mtext(paste ('Y =', round(fit.lineS$coefficients[1],2), '+', 
+             round(fit.lineS$coefficients[-1,1],2), 'x', sep = " ", 
+             collapse = NULL), 3, line=-1
+             )
+mtext(paste ('r-squared value:',R2, sep = " ", 
+             collapse = NULL), 3, line=-2
+      )
+abline(0, 
+       1, 
+       col='green', 
+       lty=2, 
+       lwd=3
+       )
+```
+***
+##### Imputation Part 2:
+```{r}
+#After making sure data from W41885 correlates with data singled out from HRsemi.impyears, check for gaps for comparison post-imputation:
+findGaps(HRsemi.impyears, quiet = FALSE)
+
+HRmost <- impute(HRsemi.impyears, c(2, 3, 4), 
+                 W41885, c(2, 3, 4)
+                 )
+
+findGaps(HRsemi.impyears, quiet = FALSE)
+
+#Selects out the date range of the to-be-inserted imputed data from semi-final complete data. For some reason a day is missing on start dates, so the 86400 adds a day to match lengths.
+Rows2 <- data.frame(which(HRsemi[,1] >= as.POSIXct("2003-08-14") & 
+                          HRsemi[,1] <= as.POSIXct("2018-12-31")))
+
+#check for gaps before pasting in imputed data
+findGaps(HRsemi, quiet = FALSE)
+
+#Pastes in all the rows of imputed data from W41885 into HRsemi.impyears (aka HRmost)  
+HRsemi[Rows2[,1],c(1,3:5)] = HRmost
+
+findGaps(HRsemi, quiet = FALSE)
+```
+***
+##### Interpolation:
+```{r}
+#Checks to find number of gaps before interpolation to make sure it worked:
+findGaps(HRsemi, quiet = FALSE)
+
+#Interpolates all variables with NA gaps less than 7 days. Does not include precipitation
+HR.int <- interpolate(HRsemi, 
+                        varcols = 2:7, 
+                        methods = "spline", 
+                        maxlength = 7,
+                        quiet = TRUE, 
+                        logfile = ""
+                        )
+
+#Checks to find number of gaps in HRsemi (aka HR.int) data after interpolation
+findGaps(HR.int, quiet = FALSE)
+```
+Now, there should be a fairly complete, long-term time series data set after imputation and interpolation. Since precipitation was excluded from interpolation, we need to add the column back in.
+```{r}
+#Adds original precip column back to imputed and interpolated data
+HRcomplete <- data.frame(HR.int, HRsemi$p.1)
+names(HRcomplete) <- c('datetime', 
+                       'mt.1', 
+                       'mxt.1', 
+                       'mnt.1', 
+                       'sg.1', 
+                       'tr.1', 
+                       'ts.1', 
+                       'p.1'
+                       )
+
+#Adds a column for site name to the dataset:
+HRcomplete <- cbind(Site = 'Hay River', HRcomplete)
+```
+***
+##### Write Table (only if you want a table of just Hay River data)
+```{r}
+# write.csv(HRcomplete,
+#           file = "HRComplete.csv", 
+#           row.names = FALSE
+#             )
+```
+***
+## AKLAVIK
+```{r}
+#Search for stations in/near Aklavik so you know which ones to use.
+stations_search("Aklavik", interval = "day")
+
+#This station had the most complete and long term record. Will be used for analysis.
+W1623 <- weather_dl(station_ids = 1623, 
+                    start = "1953-01-01", 
+                    end = "2014-12-31", 
+                    interval = "day"
+                    )
+
+#changes data format
+W1623$date <- as.POSIXct(W1623$date)
+
+#creates dataframe of only selected variables; then changes names to match CRHMr format
+W1623 <- data.frame(W1623$date, 
+                     W1623$total_precip, 
+                     W1623$mean_temp, 
+                     W1623$max_temp, 
+                     W1623$min_temp, 
+                     W1623$snow_grnd, 
+                     W1623$total_rain, 
+                     W1623$total_snow
+                     )
+names(W1623) <- c('datetime', 
+                   'p.1', 
+                   'mt.1', 
+                   'mxt.1', 
+                   'mnt.1', 
+                   'sg.1', 
+                   'tr.1', 
+                   'ts.1'
+                   )
+
+#Checks to find number of gaps before interpolation to make sure it worked:
+findGaps(W1623, quiet = FALSE)
+
+#Interpolates all variables with NA gaps less than 7 days. Does not include precipitation
+W1623.int <- interpolate(W1623, 
+                        varcols = 2:7, 
+                        methods = "spline", 
+                        maxlength = 7,
+                        quiet = TRUE, 
+                        logfile = ""
+                        )
+
+#Checks to find number of gaps in HRsemi (aka HR.int) data after interpolation
+findGaps(W1623.int, quiet = FALSE)
+
+#Adds original precip column back to imputed and interpolated data
+W1623.all <- data.frame(W1623.int, W1623$p.1)
+names(W1623.all) <- c('datetime', 
+                       'mt.1', 
+                       'mxt.1', 
+                       'mnt.1', 
+                       'sg.1', 
+                       'tr.1', 
+                       'ts.1', 
+                       'p.1'
+                       )
+
+#Adds a column for site name to the dataset:
+W1623.all <- cbind(Site = 'Aklavik', W1623.all)
+```
+
+####Combine sites into master list
+```{r}
+Master.List <- rbind(FSComplete.Final, HRcomplete, W1623.all)
+
+# names(Master.List) <- c('Site',
+#                        'Date', 
+#                        'Mean Temp', 
+#                        'Max Temp', 
+#                        'Min Temp', 
+#                        'Snow on Ground', 
+#                        'Total Rain', 
+#                        'Total Snow', 
+#                        'Precipitation'
+#                        )
+
+write.csv(Master.List,
+          file = "Master.List.csv", 
+          row.names = FALSE
+            )
+
+```
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.

@@ -1,0 +1,253 @@
+---
+title: "'Hypothesis #3 - Higher spring water levels and the possibility of flooding"
+  exists when: Snowpack SWE at the end of winter is high'
+output:
+  pdf_document: default
+  word_document: default
+---
+
+The purpose of this code is to determine if the snowpack SWE is related to flooding and/or high water levels that lead to ice jam flooding. A majority of this code was adapted from code previously developed by Dr. Ryan Connon, Hydrologist for the Government of the Northwest Territories.
+
+NOTE: Need to run the script 'Timing of Spring Melt' (SpMT function) and 'Streamflow' (SFMax function) first to get some of the variables needed to run this script.
+
+Libraries to run when you open R
+```{r}
+library(tidyhydat)
+library(ggplot2)
+library(Kendall)
+library(dplyr)
+library(lubridate)
+library(plotly)
+library(xts)
+library(mblm)
+
+setwd("C:/Users/Goldmember/Documents/USask/MWSterm3project/R/FOR_PROJECT")
+
+Master.List <- read.csv("C:/Users/Goldmember/Documents/USask/MWSterm3project/R/FOR_PROJECT/Master.List.csv", header = TRUE)
+
+
+```
+
+Function to analyze snow water equivalent (SWE) at each site
+RUN LAST
+```{r}
+SWE <- Winter.SWE(Master.List, 
+                site_name = "Aklavik",
+                days_of_record = 200,
+                start_year = 1850,
+                end_year = 2050,
+                start_month = 10, #inclusive
+                end_month = 4)
+
+```
+
+Code for runnning the function "SWE" (from Ryan Connon)
+```{r}
+# Start and end dates can be selected based on what you are looking for, also update site_name as needed.
+
+Winter.SWE <- function(Master.List, 
+                       site_name = "Aklavik",
+                       days_of_record = 200,
+                       start_year = 1850,
+                       end_year = 2050,
+                       start_month = 10, #inclusive
+                       end_month = 4) #inclusive 
+{
+    if (start_month == 1) {
+      start <- "01 Jan"
+    } else if (start_month == 2) {
+      start <- " 01 Feb"
+    } else if (start_month == 3) {
+      start <- "01 Mar"
+    } else if (start_month == 4) {
+      start <- "01 Apr"
+    } else if (start_month == 5) {
+      start <- "01 May"
+    } else if (start_month == 6) {
+      start <- "01 Jun"
+    } else if (start_month == 7) {
+      start <- "01 Jul"
+    } else if (start_month == 8) {
+      start <- "01 Aug"
+    } else if (start_month == 9) {
+      start <- "01 Sep"
+    } else if (start_month == 10) {
+      start <- "01 Oct"
+    } else if (start_month == 11) {
+      start <- "01 Nov"
+    } else if (start_month == 12) {
+      start <- "01 Dec"
+    }
+    
+    if (end_month == 1) {
+      end <- "31 Jan"
+    } else if (end_month == 2) {
+      end <- "28 Feb"
+    } else if (end_month == 3) {
+      end <- "31 Mar"
+    } else if (end_month == 4) {
+      end <- "30 Apr"
+    } else if (end_month == 5) {
+      end <- "31 May"
+    } else if (end_month == 6) {
+      end <- "30 Jun"
+    } else if (end_month == 7) {
+      end <- "31 Jul"
+    } else if (end_month == 8) {
+      end <- "31 Aug"
+    } else if (end_month == 9) {
+      end <- "30 Sep"
+    } else if (end_month == 10) {
+      end <- "31 Oct"
+    } else if (end_month == 11) {
+      end <- "30 Nov"
+    } else if (end_month == 12) {
+      end <- "31 Dec"
+    }
+    
+  wtr_yr <- function(dates, 
+                     start_month = 10) 
+    {
+    dates.posix = as.POSIXlt(dates)
+    offset = ifelse(dates.posix$mon >= start_month - 1, 1, 0)
+    adj.year = dates.posix$year + 1900 + offset
+    adj.year
+  }
+
+#Called in the Master List
+data = Master.List[Master.List$Site == site_name ,]
+
+#Rename columns to match Ryans Code
+names(data) <- c('site',
+                  'date',
+                  'mean_temp', 
+                  'max_temp', 
+                  'min_temp', 
+                  'tsnow_ground', 
+                  'total_rain_mm', 
+                  'total_snow',
+                  'total_precip_mm')
+
+Summary <- data %>%
+  mutate(water_year = wtr_yr(data$date)) %>%
+  mutate(month = month(date)) %>%             #added a month column
+  filter(water_year >= start_year) %>%
+    filter(water_year <= end_year) %>%
+    filter(month <= end_month | month >= start_month) %>%
+    group_by(water_year) %>%
+    summarize(SWE = sum(total_precip_mm, na.rm = TRUE) - sum(total_rain_mm, na.rm = TRUE),
+              n1 = sum(!is.na(total_precip_mm)),
+              n2 = sum(!is.na(total_rain_mm))) %>%
+  mutate(n = ifelse(n1 >= n2, n1, n2)) %>%
+  select(-n1, -n2) %>%
+  subset(water_year >= start_year) %>%
+  subset(water_year <= end_year) %>%
+  subset(n >= days_of_record)
+
+  Summary <- data.frame(Summary)
+  
+  Summary$SWE[Summary$SWE<0] <- NA
+
+  return(Summary)
+}
+
+```
+
+
+Linear Regression model for comparing maximum SWE against peak streamflow
+```{r}
+#Select a date range common to both datasets (so that the row lengths are equal)
+SWEMax <- SWE[SWE$water_year >= '1940' &
+          SWE$water_year <= '2015',]
+SFSpr <- SFMaxAk[SFMaxAk$Date >= '1939-01-01' &
+          SFMaxAk$Date <= '2016-12-31',]
+
+SWEMax <- SWE[SWE$water_year >= 1974 &
+                 SWE$water_year <= 1977 |
+                 SWE$water_year >= 2009 &
+                 SWE$water_year <= 2016 ,]
+
+SFSpr <- SFMaxAk[SFMaxAk$Date >= 1974 &
+                 SFMaxAk$Date <= 1977 |
+                 SFMaxAk$Date >= 2009 &
+                 SFMaxAk$Date <= 2016 ,]
+
+#Create linear regression model
+fit_line <- lm(SFSpr$Value ~ SWEMax$SWE)
+summary(fit_line)
+
+#P-value (signif is significant digits - the last digit)
+PV <- signif(summary(fit_line)$coefficients[2,4],3)
+#R-squared value
+R2 <- signif(summary(fit_line)$r.squared,3)        
+
+#plot
+plot(SWEMax$SWE,SFSpr$Value,
+     xlab="Maximum annual SWE", ylab="Maximum streamflow")
+abline(fit_line)
+title(main="Max Snow Water Equivalent Plotted Against the Corresponding
+   Maximum Spring Streamflows for Aklavik", col.main="black", font.main=4)
+mtext(paste ('P-Value:',PV, sep = " ", collapse = NULL),
+   3, line=-2)
+mtext(paste ('R-squared Value:',R2, sep = " ", collapse = NULL),
+   3, line=-3)
+
+```
+
+
+
+Linear Regression model for comparing maximum SWE against peak WATER LEVEL
+```{r}
+#Select a date range common to both datasets (so that the row lengths are equal)
+SWEMax <- SWE[SWE$water_year >= '2002' &
+          SWE$water_year <= '2016',]
+WLSpr <- WLMaxFS[WLMaxFS$Date >= '2002-01-01' &
+          WLMaxFS$Date <= '2017-12-31',]
+
+#Create linear regression model
+fit_line <- lm(WLSpr$Value ~ SWEMax$SWE)
+summary(fit_line)
+
+#P-value (signif is significant digits - the last digit)
+PV <- signif(summary(fit_line)$coefficients[2,4],3)
+#R-squared value
+R2 <- signif(summary(fit_line)$r.squared,3)        
+
+#plot
+plot(SWEMax$SWE,WLSpr$Value,
+     xlab="Maximum annual SWE", ylab="Maximum Water Levels")
+abline(fit_line)
+title(main="Max Snow Water Equivalent Plotted Against the Corresponding
+   Maximum Spring Water Levels for Fort Simpson", col.main="black", font.main=4)
+mtext(paste ('P-Value:',PV, sep = " ", collapse = NULL),
+   3, line=-2)
+mtext(paste ('R-squared Value:',R2, sep = " ", collapse = NULL),
+   3, line=-3)
+```
+
+
+Part B
+Are flood events assoicated with high SWE amounts? Are SWE amounts during flood events above or below long-term average?
+
+The flood years for the community of interest need to be entered in the 'FloodEvents' list.
+```{r}
+# FloodEvents <- list(1952, 1963, 1965, 1972, 1974, 1978, 1979, 1981, 1982, 1985, 1986, 1989, 1992, 1994, 1997, 2001, 2003, 2005, 2006, 2007, 2008, 2009, 2010)
+FloodEvents <- list(1961, 1982, 1992, 2006, 2013)
+FloodEvents
+#matches 
+FE <- SWEMax[SWEMax$water_year %in% FloodEvents,]
+
+NFE <- SWEMax[!SWEMax$water_year %in% FloodEvents,]
+
+#mean four week spring temp for flood years
+MFE <- mean(SWEMax$SWE, na.rm=TRUE)
+
+#mean four week spring temp for all the years - excluding flood years
+MNFE <- mean(NFE$SWE , na.rm=TRUE)
+
+MFE
+MNFE
+
+
+```
+

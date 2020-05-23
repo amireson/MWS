@@ -1,0 +1,68 @@
+---
+title: "SpMT - Estimating Timing of Spring Melt and the Corresponding Day of Year"
+output:
+    html_notebook: default
+    pdf_document: default
+---
+
+This script calculates the timing of spring melt (the day of year (DOY)) when minimum daily temperataures are greater than 0 degrees C for five consecutive days (the DOY would be the last day in the five day sequence).  Must run the FinalDataSets script first to obtain the Master.List.
+
+Libraries to run when you open R
+```{r}
+library(tidyhydat)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(lubridate)
+
+setwd("C:/Users/Goldmember/Documents/USask/MWSterm3project/R/FOR_PROJECT")
+```
+
+Timing of Spring Snow Melt Function - RUN LAST after all the variables and the function code have been run. SpMT = Spring Melt Temperature
+```{r}
+SpMT.DOY <- SpMT (Site_Name, ML)
+```
+
+Variables (run first):
+1. Enter the site name from the master list (Master.List) you wish to look at
+2. Choose a melt length (ML) for how many days you want above 0 degrees C temperatures
+```{r}
+#Example: Site_Name = Master.List[Master.List$Site == "Fort Simpson" ,]
+Site_Name = "Aklavik"
+
+ML = 5 
+```
+
+Code for running the Spring Melt Function - this selects the first occurance of 5 consecutive days with minimum air temperatures greater than 0 degrees C in the beginning of the calendar year. Should not have to adjust/change anything in this section.
+```{r}
+SpMT <- function (Site_Name, ML) {
+  Master.List = Master.List[Master.List$Site == Site_Name ,]
+  
+#Create a dataframe with datetime and mininmum temp data from the Master.List dataframe.  
+Master.List$datetime <- as.POSIXct(Master.List$datetime)
+Min5dayT <- data.frame(Master.List$datetime, 
+                         signif(Master.List$mnt.1, 3)
+                         )
+names(Min5dayT) <- c('datetime','mnt.1') 
+  
+#The "rle" function creates a list of lengths and values of temperature. It returns a "False" if temps are less than zero; "True" if temps are greater than zero. 
+temp_seq <- rle(Min5dayT$mnt.1 > 0)
+
+#Sequence "unpacks" the "rle" function results. It puts the values and lengths into a column, in this case within the dataframe Min5dayT
+Min5dayT$seq_L <- sequence(temp_seq$lengths)
+
+#This puts the true/false values into a column in the Min5dayT dataframe for viewing
+Min5dayT$seq_V <- Min5dayT$mnt.1 > 0 
+  
+Melt.Day <- Min5dayT %>% 
+            group_by(year=year(datetime)) %>% 
+            slice (min(which(seq_L >= ML & seq_V == 'TRUE'))) 
+#the "which" returns all row numbers where statement is TRUE; "min" returns lowest row number (which also should correspond with initial timing of spring melt). "Slice" returns the row number specified (in this case should the be the min temp for each year)
+  
+#This next part creates a new column representing day of year (DOY) by taking the datetime and converting to julian day:   
+Melt.Day$DOY <- strftime(Melt.Day$datetime, format='%j')
+  
+  return(data.frame(Melt.Day))
+}
+```
+

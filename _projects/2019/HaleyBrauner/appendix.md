@@ -5,10 +5,6 @@
 
 # Appendices
 
-[Appendix A - Project Plan ](Appendices/Appendix A - MWS Capstone Project Plan.pdf)
+[Appendix C - Additional Tables and Figures](Appendices/Brauner_AppendixC.pdf)
 
-[Appendix B - Monthly Progress Reports](Appendices/Appendix B - Monthly Project Updates.pdf)
-
-[Appendix C - Additional Tables and Figures](Appendices/Appendix C.pdf)
-
-[Appendix D - R Code](Appendices/Appendix D.pdf)
+[Appendix D - R Code](Appendices/Brauner_AppendixD.pdf)

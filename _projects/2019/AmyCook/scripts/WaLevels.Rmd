@@ -1,0 +1,136 @@
+---
+title: "Day of year of maximum annual water level; all water levels (available from the Water Survey); and max fall water levels"
+output:
+    html_notebook: default
+    pdf_document: default
+---
+
+This script will provide the day of year (DOY) of the maximum annual water level, all the water levels for a given station during a given time period, and/or the max annual water level for a specified station. This script should be run before others.
+
+```{r}
+library(CRHMr)
+library(plyr)
+library(tidyverse)
+library(lubridate)
+library(plotly)
+library(reshape2)
+library(tidyhydat)
+library(weathercan)
+library(reshape2)
+library(scales)
+library(zoo)
+library(xts)
+
+setwd("C:/Users/Goldmember/Documents/USask/MWSterm3project/R/FOR_PROJECT")
+```
+
+Water Levels function.  Run LAST after variables and function code have been run.
+```{r}
+WLMax <- Water.Level.Max (STID1, DateS, DateE, DOY)  #Max water level each year
+WL <- Water.Level (STID1, DateS, DateE, DOY)        #All water levels
+WLFall_Max <- Water.Level.Fall (STID1, DateS, DateE, DOYS, DOYE) #Max Fall water levels
+```
+
+Variables (run first):
+1. Enter the station ID (STID1) number
+2. Enter the start (DateS) and end (DateE) dates for the water level period of interst
+3. Cutoff day of year (DOY) from which to select spring water levels
+4. Cutoff days of year (DOYS = start day, DOYE = end day) for Hypothesis 4 (fall water levels).
+```{r}
+# 1
+STID1 = '07OB001'
+
+# 2
+DateS = "1964-01-01"
+DateE = "2017-12-31"
+
+# 3 - example: 166 Juliene Days = June 15th; June 16th in a non leap year
+DOY = 166
+
+# 4 - Cutoff DOY from which to select fall water level for Hypothesis 4)
+DOYS = 274 #Oct 1st
+DOYE = 304 #Oct 31st
+#Number of timesteps over which the mean is calculated
+RollAvg_2W = 15
+```
+
+Function code for maximum annual water levels
+```{r}
+Water.Level.Max <- function(STID1, DateS, DateE, DOY) {
+
+   WL <- hy_daily_levels(station_number = STID1,
+                       start_date = DateS, 
+                       end_date = DateE
+                       )
+
+   WL$Date <- as.POSIXct(WL$Date)
+
+   #Select all water level records before a given DOY
+   WL$DOY <- strftime(WL$Date, format='%j')
+   WL <- WL[WL$DOY <= DOY,]
+
+
+  #Selecting the max streamflow each year
+   WLmax <- WL %>% 
+            group_by(year=year(Date)) %>% 
+            slice (which.max(Value))
+
+return(WLmax)
+}
+```
+
+Function code for all water levels from a specified station for a specified date range
+```{r}
+Water.Level <- function(STID1, DateS, DateE, DOY) {
+
+   WL <- hy_daily_levels(station_number = STID1,
+                       start_date = DateS, 
+                       end_date = DateE
+                       )
+
+   WL$Date <- as.POSIXct(WL$Date)
+
+   #Create a DOY column
+   WL$DOY <- strftime(WL$Date, format='%j')
+
+return(WL)
+}
+```
+
+Function code for maximum fall streamflow
+```{r}
+Water.Level.Fall <- function(STID1, DateS, DateE, DOYS, DOYE) {
+
+   WL <- hy_daily_levels(station_number = STID1,
+                       start_date = DateS, 
+                       end_date = DateE
+                       )
+
+   WL$Date <- as.POSIXct(WL$Date)
+
+   #Select all water level records within a given DOY range
+   WL$DOY <- strftime(WL$Date, format='%j')
+   WL <- WL[WL$DOY >= DOYS &
+            WL$DOY <= DOYE,]
+
+   Fall2WAvg <- WL %>%
+                select('Date','Value','DOY') %>%
+                mutate(AvgT2W = rollmean(Value, RollAvg_2W, na.pad=TRUE, align="center")) 
+
+   #Delete NAs
+   Fall2WAvg <- Fall2WAvg[!is.na(Fall2WAvg$AvgT2W),]
+
+  #Selecting the max streamflow each year
+   Fall2WMax <- Fall2WAvg %>% 
+                group_by(year=year(Date)) %>% 
+                slice (which.max(AvgT2W))
+
+   Fall2WMax <- data.frame(Fall2WMax)
+return(Fall2WMax)
+}
+
+```
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
