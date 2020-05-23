@@ -4,7 +4,7 @@ year: 2019
 title: Representation of Spatial Heterogeneity of the Baker Creek Watershed in the Land-Surface Hydrology Model, MESH
 ---
 
-<img src="/images/MWS_logo_notext.png" align="right" width=90px>
+<img src="{{site.baseurl}}/images/MWS_logo_notext.png" align="right" width=90px>
 
 # Representation of Spatial Heterogeneity of the Baker Creek Watershed in the Land-Surface Hydrology Model, MESH
 

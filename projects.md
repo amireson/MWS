@@ -8,7 +8,7 @@ title: Project Archive
 # {{ i }}
 {% for proj in site.projects %}
 {%if proj.year == i %}
-[{{ proj.author }}:]({{ proj.url }})
+[{{ proj.author }}:]({{site.baseurl}}{{ proj.url }})
 {{ proj.title }}
 {% endif %}
 {% endfor %}
