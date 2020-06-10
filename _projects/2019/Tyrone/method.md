@@ -19,7 +19,7 @@ Figure 11: Correlation of peaks of annual precipitation and annual head differen
 
 Table 2: 5-Year average data of the D-Zone of Zehner aquifer.
 
-![](figures/Table2.png){ width=100% }
+![](figures/Table2.png) 
 
 The general ground water balance is:
 $$∆V= (R) – (D)$$
@@ -40,14 +40,14 @@ Where,
 *	Q<sub>P</sub> = Average annual withdrawal (pumping) from production wells = 409.2 dam<sup>3</sup>/year (Table 2) …... [1]
 * ∆V = Change in storage volume of the aquifer in a year (dam<sup>3</sup>/year). Can be roughly estimated with changes in head and aquifer hydraulic properties.
 
-![](figures/Figure12.png){ width=100% }
+![](figures/Figure12.png)
 Figure 12: SW-NE trending cross section (BHL, 2004) of the 11.2 Km<sup>2</sup> D-zone. Majority of the area is overlain by the glacial till deposits.
 
 ## Results
 ### Estimating recharge in the D-zone
 Recharge = Recharge through the glacial-till aquitard
 
-![](figures/Figure13.png){ width=100% }
+![](figures/Figure13.png)
 Figure 13: Conceptual Figure representing the vertical recharge through glacial-till aquitard and intra aquifer flow in the D-Zone of Zehner aquifer. New water is contributed by precipitation and due to stress from incoming new water the old water below leaks into the Zehner aquifer.
 
 The Condie aquifer has a high horizontal hydraulic conductivity and, therefore, much of the groundwater would flow horizontally contributing less to vertical recharge. In contrast, the glacial till aquitard has an overall low hydraulic conductivity, hence water will drain vertically through the low bulk hydraulic conductivity (K<sub>v</sub>) glacial till aquitard into the underlying high hydraulic conductivity Zehner aquifer.
@@ -56,7 +56,7 @@ Darcy’s law will be used to quantify the flow from the glacial-till aquitard t
 
 Table 3: Annual water level and head difference of 2004-02 (Condie) and 2004-02 (Zehner). The water level for the glacial till aquitard is assumed to be equivalent to the depth of the Condie aquifer.
 
-![](figures/Table3.png){ width=100% }
+![](figures/Table3.png)
 
 Darcy’s Law:
 $$R=q=Kv ×(∆h/L)  …… [equation 2]$$
@@ -69,7 +69,7 @@ Where;
 
 Table 4: Recharge rate from the glacial-till aquitard to the Zehner aquifer in the D-Zone with a range of vertical hydraulic conductivities.
 
-![](figures/Table4.png){ width=100% }
+![](figures/Table4.png)
 
 Therefore, the rate of recharge R in the D-zone from the glacial-till aquitard to the Zehner aquifer may range between **1.098 to 109.8** dam<sup>3</sup>/year.
 
@@ -82,7 +82,7 @@ From Figure 10, the C-Zone lies to the north of the D-Zone and from this and pre
 
 Table 5: Annual water level and head difference of 2004-03 (Zehner) in the C-Zone and 2004-05 (Zehner) in the D-Zone.
 
-![](figures/Table5.png){ width=100% }
+![](figures/Table5.png)
 
 Using Darcy’s law, the flow from the C-Zone to the D-Zone is estimated as follows:
 $$I_1=q=K_h  ×(∆h/L)  …… [equation 3]$$
@@ -97,7 +97,7 @@ In order to estimate the total rate of flow in dam<sup>3</sup>/year from the C-Z
 
 Table 6: Rate of intra-aquifer flow from the C-Zone to the D-Zone
 
-![](figures/Table6.png){ width=100% }
+![](figures/Table6.png)
 
 Therefore, the rate of intra-aquifer flow (I) from the C-Zone to the D-Zone within the Zehner aquifer may range between **2.21 to 22.1** dam<sup>3</sup>/year.
 
@@ -110,7 +110,7 @@ PBSZ is the representative piezometer in the B-Zone close to the boundary betwee
 
 Table 7: Annual water level and head difference of PBSZ (Zehner) in the B-Zone and 2004-02 (Zehner) in the D-Zone.
 
-![](figures/Table7.png){ width=100% }
+![](figures/Table7.png)
 
 Using Darcy’s law, the flow from the B-Zone to the D-Zone is estimated as follows:
 $$I_2=q=K_h  ×(∆h/L)  …… [equation 4]$$
@@ -125,7 +125,7 @@ In order to estimate the total rate of flow in dam<sup>3</sup>/year from the B-Z
 
 Table 8: Rate of intra-aquifer flow from the B-Zone to the D-Zone.
 
-![](figures/Table8.png){ width=100% }
+![](figures/Table8.png)
 
 Therefore, the rate of intra-aquifer flow (I) from the B-Zone to the D-Zone within the Zehner aquifer may range between **0.6 to 6.2** dam<sup>3</sup>/year.
 
@@ -155,10 +155,10 @@ $$(D)=(I_1+I_2)+(R)-(Q_P)-(∆V) …… [equation 6]$$
 
 Table 9: Water balance functions of the D-Zone and the back-estimated value for discharge (D).
 
-![](figures/Table9.png){ width=100% }
+![](figures/Table9.png)
 
 ## Conclusion
-![](figures/Figure14.jpg){ width=100% }
+![](figures/Figure14.jpg)
 Figure 14: Conceptual figure representing the estimated water balance of the D-Zone.
 
 Figure 14 is the conceptual figure representing the calculated water balance of the D-Zone. The back-estimated discharge value is negative (-402.2 to -268 dam<sup>3</sup>/year) which implies that the overall storage within the D-Zone is depleting each year. Withdrawal rates of the production wells in the D-Zone exceeds the rate of recharge. From the estimated water balance and decline in water level trend of the D-Zone (Figure 8), we can infer that the outflow from the D-Zone exceeds the inflow, hence there is an annual decrease in storage. To develop a more accurate estimation of water balance in the D-Zone, the following data would be required:
