@@ -1,8 +1,6 @@
 ---
 ---
 
-[home](home.html)
-
 # Summary of findings
 
 Ice jam floods occur rapidly, often without warning, and are causing unprecedented damage to communities in the Northwest Territories.   This project was intended to provide an improved understanding of flood causation and aid in possible flood forecasting at NWT communities by:

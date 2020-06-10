@@ -1,8 +1,6 @@
 ---
 ---
 
-[home](home.html)
-
 # References
 
 Albers, S., Hutchinson, D., Dunnington, D., Whaley, R., Winslow, L., DeCicco, L., (2019). tidyhydat. R package version 0.4.0.

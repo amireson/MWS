@@ -1,8 +1,6 @@
 ---
 ---
 
-[home](home.html)
-
 # Introduction
 
 In 1975, the federal government initiated a Flood Damage Reduction program to address flood hazards in Canada. The NWT became part of the program in 1979, and in the late 1980’s, nine of the 33 NWT communities were identified as “at risk" of recurrent and severe flooding (Northwest Territories Flood Designations, 2016). These communities are generally situated on the banks of the Hay, Liard, Peel, and Mackenzie Rivers, and are listed below:

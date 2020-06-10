@@ -1,8 +1,6 @@
 ---
 ---
 
-[home](home.html)
-
 # Data analysis
 
 ## Analysis objectives

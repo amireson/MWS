@@ -1,8 +1,6 @@
 ---
 ---
 
-[home](home.html)
-
 # Social Engagment Activity
 
 **OPTIONAL**

@@ -1,7 +1,6 @@
 ---
 ---
 
-[home](home.html)
 # 3. Geology and Hydrogeology
 
 ![](figures/Figure3.png){ width=100% }

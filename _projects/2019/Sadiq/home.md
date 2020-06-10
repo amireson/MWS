@@ -3,7 +3,6 @@ author: Sadiq Ajani
 year: 2019 
 title: Evaluating Soil Temperature and Soil Moisture algorithms in CLASSIC
 ---
-<img src="{{site.baseurl}}/images/MWS_logo_notext.png" align="right" width=90px>
 
 # Evaluating Soil Temperature and Soil Moisture algorithms in CLASSIC
 

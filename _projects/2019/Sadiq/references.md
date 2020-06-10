@@ -1,7 +1,6 @@
 ---
 ---
 
-[home](home.html)
 [Previous Section](solution.html)
 [Next Section](appendix.html)
 

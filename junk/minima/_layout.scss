@@ -7,7 +7,6 @@
   min-height: $spacing-unit * 1.865;
   // Positioning context for the mobile navigation icon
   position: relative;
-  background-color: #e6f7ff
 }
 
 .site-head-logo {
@@ -116,7 +115,6 @@
 .site-footer {
   border-top: 1px solid $grey-color-light;
   padding: $spacing-unit 0;
-  background-color: #e6f7ff
 }
 
 .footer-heading {
@@ -155,9 +153,9 @@
 }
 
 .footer-col-3 {
-  width: -webkit-calc(50%);
-  width:         calc(50%);
-  float: right;
+    width: -webkit-calc(50%);
+    width:         calc(50%);
+    float: right;
 }
 
 @include media-query($on-laptop) {
@@ -263,16 +261,4 @@
       @include relative-font-size(1.125);
     }
   }
-}
-
-.people {
-  width: 33.3%;
-  float: left;
-}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
 }

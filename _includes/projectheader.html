@@ -1,11 +1,6 @@
 <header class="site-header" role="banner">
 
   <div class="head">
-      <div class="site-head-logo">
-          <a class="site-title" rel="author" href="{{ "/" | relative_url }}">
-      <img style="margin-bottom: 10px;"src="{{site.baseurl}}/images/mws-logoHorizontal_green.png" height=80px>  
-          </a>
-      </div>
     {%- assign default_paths = site.pages | map: "path" -%}
     {%- assign page_paths = site.header_pages | default: default_paths -%}
 

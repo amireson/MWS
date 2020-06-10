@@ -1,10 +1,9 @@
 ---
 ---
 
-[home](home.html)
 
 # 4. Zehner Aquifer, Existing Water Balance and Safe Yield
-<div style="text-align: justify">Since 1988, Maathuis and van der Kamp’s study has been the guideline for other studies to infer the Zehner aquifer boundary, water balance and groundwater flow in the Regina East area. Regina Aquifer Management Plan (Part A- Allocation Plan) commissioned by the Saskatchewan Water Corporation (SaskWater) in 1989 had inferred the safe yield for the Zehner aquifer as 4800 dam<sup>3</sup>/year (Clifton Associates Ltd., 1989). This yield is from the difference between the estimated natural recharge and discharge mentioned in the 1988 water balance (Table 1). It is referred to as inflow less natural outflow. At present, WSA accepts this as the safe yield for allocation limits within the Zehner aquifer.
+Since 1988, Maathuis and van der Kamp’s study has been the guideline for other studies to infer the Zehner aquifer boundary, water balance and groundwater flow in the Regina East area. Regina Aquifer Management Plan (Part A- Allocation Plan) commissioned by the Saskatchewan Water Corporation (SaskWater) in 1989 had inferred the safe yield for the Zehner aquifer as 4800 dam<sup>3</sup>/year (Clifton Associates Ltd., 1989). This yield is from the difference between the estimated natural recharge and discharge mentioned in the 1988 water balance (Table 1). It is referred to as inflow less natural outflow. At present, WSA accepts this as the safe yield for allocation limits within the Zehner aquifer.
 
 Table 1 is the detailed water balance after Clifton Associates Ltd., (1989) report. Total inflow to the Zehner aquifer is assumed to be at 6,750 dam<sup>3</sup>/year. The estimated infiltration rate of 4,000 to 6,000 dam<sup>3</sup>/year was evaluated by multiplying 2.5 to 4 cm/year over the 150 Km<sup>2</sup> area of the Zehner aquifer. Recharge through depression-focused recharge was assumed to be 1,000 to 2,000 dam<sup>3</sup>/year over the entire aquifer. Contribution from Condie aquifer east section was assumed to be relatively small through the underlying thick till at 0 to 500 dam<sup>3</sup>/year.
 
@@ -12,4 +11,4 @@ Natural discharge through springs and flowing wells was estimated at 300 to 600 
 
 Table 1: Existing water balance for Zehner aquifer (After Maathuis & van der Kamp, 1988, Clifton Associates Ltd., 1989)
 
-![](figures/Table1.png){ width=100% }
+![](figures/Table1.png)

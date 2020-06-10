@@ -1,7 +1,6 @@
 ---
 ---
 
-[home](home.html)
 
 # Field work
 

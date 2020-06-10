@@ -1,10 +1,8 @@
 ---
 ---
 
-[home](home.html)
-
 # 1. Introduction
-<div style="text-align: justify">Growth in population and economy has led to an increase in the demand for water resources in the area east of the City of Regina (COR). There is no sufficient surface water supply to meet the peak demands in the area. In the absence of surface water supply, groundwater has long since played an important role in meeting domestic and municipal demands (Maathuis & Thorleifson, 2000). Groundwater is an integral part of the natural hydrologic system and its use has increased significantly over time. Only in the last few decades have we realized the limitations on its supply and its vulnerability to contamination or over-exploitation (Healy, 2010). Therefore, it is essential to review the allocation of an aquifer on a regular basis.
+Growth in population and economy has led to an increase in the demand for water resources in the area east of the City of Regina (COR). There is no sufficient surface water supply to meet the peak demands in the area. In the absence of surface water supply, groundwater has long since played an important role in meeting domestic and municipal demands (Maathuis & Thorleifson, 2000). Groundwater is an integral part of the natural hydrologic system and its use has increased significantly over time. Only in the last few decades have we realized the limitations on its supply and its vulnerability to contamination or over-exploitation (Healy, 2010). Therefore, it is essential to review the allocation of an aquifer on a regular basis.
 
 The Regina East area comprises the Town of Pilot Butte, Town of Balgonie, Town of White City, Emerald Park (RM of Edenwold) and other subdivisions of RM of Edenwold (Figure 1). The Zehner aquifer is the major quaternary aquifer system that supplies water for domestic and municipal use to the Regina East area. Demand of ground water in the Regina East area has increased greatly due to increased growth and development in the communities and the rural municipality. The ground water allocation limit for these Towns is based on the accepted sustainable yield of the Zehner aquifer (Lo, 2010). The Saskatchewan Water Security Agency-WSA (Formerly Saskatchewan Watershed Authority) has generally accepted the best sustainable yield of 4,800 dam<sup>3</sup>/year from the Zehner aquifer (Lo, 2010). The 4,800 dam<sup>3</sup>/year was based on previous studies conducted by Maathuis & van der Kamp, (1988) and the Regina Aquifer Management Plan (Part A- Allocation Plan) commissioned by the Saskatchewan Water Corporation (SaskWater) in 1989 (Clifton Associates Ltd., 1989). The 4,800 dam<sup>3</sup>/year sustainable yield accounts for the total recharge to the aquifer and the natural discharge to the springs and outflow to the Regina and Condie aquifers. In general, it is an estimate of annual inflow less natural outflow from the aquifer systems.
 
@@ -18,5 +16,5 @@ In the Zehner aquifer the major recharge zones are the wetland and other depress
 
 This study provides an alternative approach to refine the water balance in the individual zones of the Zehner aquifer and refine the recharge and discharge estimates for each zone.
 
-![](figures/Figure1.png){width=100%}
+![](figures/Figure1.png)
 Figure 1: Study Area: The inferred boundary of the Zehner aquifer and location of towns belonging to the Regina East area (Google Imagery).

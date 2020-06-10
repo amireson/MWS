@@ -1,11 +1,10 @@
 ---
 ---
 
-[home](home.html)
 # 7. Methodology to Estimate the Water Balance of the D-Zone
 
-![](figures/Figure10.png){ width=100% }
-<div style="text-align: justify">Figure 10: Assumed boundary for the D – Zone of the Zehner aquifer (Green boundary – 11.2 Km<sup>2</sup>) and groundwater flow directions from C to D-Zone and B to D-Zone through low hydraulic conductivity hydraulic barriers.
+![](figures/Figure10.png)
+Figure 10: Assumed boundary for the D – Zone of the Zehner aquifer (Green boundary – 11.2 Km<sup>2</sup>) and groundwater flow directions from C to D-Zone and B to D-Zone through low hydraulic conductivity hydraulic barriers.
 
 After studying the historic water levels, change in water level differences within each zone, and locations of the inferred hydraulic discontinuities, it was decided to consider the compartmentalized nature of the Zehner aquifer in order to refine its water balance. The aquifer was divided into zones on basis of the differences in water level elevation of piezometers and the inferred hydraulic barriers. Therefore, it was deemed appropriate to generate an individual water balance for each zone within the Zehner aquifer. In the current study, we will consider applying the proposed water balance method on the D-Zone due to its simplified nature in contrast with other zones.
 
@@ -15,7 +14,7 @@ To quantify the water balance in the D-zone, it is essential that to be aware of
 
 The WSA’s 2014 and 2017 water chemistry and isotope report suggests that the water in the Zehner aquifer’s 2004-02 and 2004-05 wells is pre-1950’s water, while that in the Condie aquifer 2004-02 well is as recent as 0-10 years (Lo & Melnik, 2017; Lo et al., 2014). Previous studies have also estimated that the Condie aquifer is placed in isolated patches within the study area and it occupies about 2.1 Km<sup>2</sup> area of the 11.2 Km<sup>2</sup> area of the D-zone (estimated from Google Earth). Figure 11 and table 2 provide a representation of the head differences over 5 years from the Zehner aquifer 2004-02 piezometer as well as the correlation between the peaks of head difference and annual precipitation. Figure 12 is a cross section (BHL, 2004) of the D-zone. From this, we can infer that the water from precipitation replenishes the Condie aquifer and the shallow area of the glacial till aquitard, while the older water at the bottom drains into the Zehner aquifer. To get a better understanding of the drainage recharge concept, please refer to the conceptual diagram in figure 13.
 
-![](figures/Figure11.png){ width=100% }
+![](figures/Figure11.png)
 Figure 11: Correlation of peaks of annual precipitation and annual head difference of Zehner aquifer in the D-Zone.
 
 Table 2: 5-Year average data of the D-Zone of Zehner aquifer.

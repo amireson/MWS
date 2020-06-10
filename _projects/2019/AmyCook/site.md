@@ -1,8 +1,6 @@
 ---
 ---
 
-[home](home.html)
-
 # Site Description
 
 The Northwest Territories (NWT), in north-western Canada, is bordered by Yukon to the west, Nunavut to the east, and British Columbia, Alberta, and Saskatchewan to the south. It has a population of roughly 44,000 (about 50% of which live in the capital city of Yellowknife). The NWT has a total area of over 1,000,000 square kilometers, and houses many remote communities that are only accessible by ice roads (in the winter) or by plane. Most floods in the NWT occur following river ice breakup in the spring. This is largely due to the climate and geography of the north. Most if not all the rivers in the NWT are north-flowing, so as spring ice breakup begins in the southern headwaters and tributaries, broken ice and warmer spring freshet water surges downstream. During the propagation of the breakup downstream it can often encounter unbreakable solid ice as winter has yet to release its grip on the more northerly portions of the basin. This results in ice jams and a high likelihood of ice jam release or backwater (water held back behind an ice jam, like a dam) floods.

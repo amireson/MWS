@@ -1,8 +1,6 @@
 ---
 ---
 
-[home](home.html)
-
 # Appendix
 
 ## APPENDIX C: FLOODPLAIN MAPS

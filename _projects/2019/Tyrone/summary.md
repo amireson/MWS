@@ -1,11 +1,10 @@
 ---
 ---
 
-[home](home.html)
 
 # 8. Summary of Findings
-![](figures/Figure15.png){ width=100% }
-<div style="text-align: justify">Figure 15: Conceptual figure depicting the water balance functions for each zone. (Note: The surface elevation and piezometer water levels are accurate but the distance between piezometers are not to scale.).
+![](figures/Figure15.png)
+Figure 15: Conceptual figure depicting the water balance functions for each zone. (Note: The surface elevation and piezometer water levels are accurate but the distance between piezometers are not to scale.).
 
 The analysis of the characteristics of the Zehner aquifer and the conducted literature review helped develop an understanding of the background of the study area and the Zehner aquifer. The increasing trend of water level in the A-Zone may be attributed to this zone experiencing less withdrawal (pumping) compared to other zones and continued replenishment through depression-focused recharge and leakage through glacial-till aquitard. Land-use within the A-Zone is surrounded by wetland-depressions which could be the main source of depression focused recharge into the A-Zone.
 

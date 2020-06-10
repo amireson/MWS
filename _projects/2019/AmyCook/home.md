@@ -4,10 +4,7 @@ year: 2019
 title: Climatic controls on flood events affecting communities of the Northwest Territories
 ---
 
-<img src="{{site.baseurl}}/images/MWS_logo_notext.png" align="right" width=90px>
-
-# Climatic controls on flood events affecting communities of the Northwest Territories
-
+# {{page.title}}
 
 **Student**: Amy Cook
 

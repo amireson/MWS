@@ -1,8 +1,6 @@
 ---
 ---
 
-[home](home.html)
-
 [Previous Section](references.html)
 
 # Appendix

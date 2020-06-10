@@ -41,7 +41,7 @@ ul, ol, dl, figure,
 }
 
 p {
-  text-align: left
+  text-align: justify
 }
 
 /**
@@ -259,12 +259,3 @@ table {
     border: 1px solid $grey-color-light;
   }
 }
-
-/**
- * Andrew's stuff
- */
-
-#footimg {
-    margin-right: 20pt;
-    float: right;
-}   

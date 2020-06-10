@@ -1,10 +1,9 @@
 ---
 ---
 
-[home](home.html)
 
 # 10. References
- <div style="text-align: justify">AECOM Canada Ltd. (2009). Regina East Ground Water Demand Study (Saskatchewan Watershed Authority).
+AECOM Canada Ltd. (2009). Regina East Ground Water Demand Study (Saskatchewan Watershed Authority).
 
  Beckie Hydrogeologists Ltd. (1986). A Report on Installation of Wells for Expansion of the Boggy Creek Well Field - 1986 - City of Regina.
 

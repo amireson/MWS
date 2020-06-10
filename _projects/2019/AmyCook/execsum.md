@@ -1,8 +1,6 @@
 ---
 ---
 
-[home](home.html)
-
 # Executive Summary
 
 In the high northern latitudes, close to 60% of rivers will experience some degree of freeze-up every winter, putting northern communities located at the banks of rivers at risk and susceptible to the threats posed by ice jams and subsequent ice jam floods (Rokaya et al., 2018). The dominant river system in the NWT is the Mackenzie River and its tributaries (such as the Hay, Liard, and Peel Rivers). The Mackenzie River freezes annually, and, due to its low slope and numerous meanders, it is prone to ice jams, predominantly during spring break up (Beltaos and Prowse, 2001). Breakup ice jams are dynamic and very site specific, and are therefore difficult to predict. They can be especially unstable, and fail suddenly, causing drastic spikes in water levels (White et al., 2006). Subsequent flooding can lead to devastating destruction to northern riverine communities as ice jam floods occur quickly and without warning. These types of floods are responsible for about two-thirds of all flood damage in Canada (Beltaos and Prowse, 2001). To better aid and warn ice jam prone communities, improved forecasting and prediction tools are needed with regards to the ice jam formation and whether (and to what extent) they will result in localized flooding.

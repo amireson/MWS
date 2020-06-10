@@ -1,7 +1,6 @@
 ---
 ---
 
-[Home](home.html)
 [Previous Section](model.html)
 [Next Section](data.html)
 

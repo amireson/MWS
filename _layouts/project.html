@@ -1,0 +1,10 @@
+---
+layout: default
+---
+
+<div class="home">
+    {% unless page.url contains 'home' %}
+    <a href="home.html">Home</a>
+    {% endunless %}
+ {{ content }}
+</div>

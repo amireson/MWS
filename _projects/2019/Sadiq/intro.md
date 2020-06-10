@@ -1,7 +1,6 @@
 ---
 ---
 
-[Home](home.html)
 [Previous Section](execsum.html)
 [Next Section](site.html)
 

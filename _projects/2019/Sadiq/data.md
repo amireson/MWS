@@ -1,7 +1,6 @@
 ---
 ---
 
-[Home](home.html)
 [Previous Section](runningclassic.html)
 [Next Section](findings.html)
 

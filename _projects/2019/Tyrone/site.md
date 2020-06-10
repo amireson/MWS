@@ -2,11 +2,10 @@
 ---
 
 
-[home](home.html)
 
 # 2. Site Description
-![](figures/Figure2.png){ width=100% }
-<div style="text-align: justify">Figure 2: Major aquifers in the Regina area (left) and inferred spatial extent of hydraulic barriers (right) in the Zehner aquifer (Lo & Melnik, 2014; Lo et al., 2014).
+![](figures/Figure2.png)
+Figure 2: Major aquifers in the Regina area (left) and inferred spatial extent of hydraulic barriers (right) in the Zehner aquifer (Lo & Melnik, 2014; Lo et al., 2014).
 
 ## 2.1 Study Area
 The Study area is in South Saskatchewan and is located to the northeast of City of Regina between Townships of 17 and 19 and Ranges 17 and 19 W2 (Figure 1 and 2). The figures outline an inferred boundary of the Zehner aquifer, and the figure 1 represents the locations of the Town of Pilot Butte, Balgonie, White City, and Emerald Park (RM of Edenwold). The study area involves the Boggy Creek well field, which is located near and at the immediate vicinity of the Boggy creek reservoir. The Town of Pilot Butte, SaskWater (SWC) and RM of Edenwold operate production wells further south of the Boggy Creek well field and the gravel pit area. SaskWater wells supply water to the Town of White City. RM of Edenwold wells supply water to Emerald Park and other subdivisions of the RM while the Town of Pilot Butte wells supply water to the Town of Pilot Butte and Balgonie.  The Town of Balgonie’s production wells 1 and 2 has been decommissioned and its production well 3 is about 2 to 4 Kms northwest of the Town of Balgonie. The groundwater in the Town of Balgonie wells have been exceeding the selenium concentration guidelines (WaterMark Consulting LTD., 2010). Therefore, since 2014, the Town of Balgonie obtains water from the Town of Pilot Butte wells for its water demands and have ceased extraction from their wells. The Balgonie PW 3 still has an existing allocation for standby purposes. Previously, majority of the population in the Town of Pilot Butte depended on private wells in the Condie aquifer for their domestic water demands. But, as the Condie aquifer is exposed to the surface, it is prone to contamination from decommissioned waster water lagoons, gravel pit mining and surface runoff. Hence a shift was planned towards a centralized system to meet their demands (AECOM Canada Ltd., 2009). Since 2013, all the Regina East Towns have been withdrawing groundwater from production wells installed into the Zehner aquifer to meet their municipal groundwater demands.

@@ -3,7 +3,6 @@ author: Tyrone Miranda
 year: 2019 
 title: Refinement of the Zehner aquifer water balance
 ---
-<img src="{{site.baseurl}}/images/MWS_logo_notext.png" align="right" width=90px>
 
 # Refinement of the Zehner aquifer water balance
 

@@ -1,7 +1,6 @@
 ---
 ---
 
-[Home](home.html)
 [Previous Section](findings.html)
 [Next Section](references.html)
 
